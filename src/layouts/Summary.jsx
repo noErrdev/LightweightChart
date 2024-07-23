@@ -7,21 +7,20 @@ const Summary = (props) => {
 
     const arr = [data];
 
-    const [response, setResponse] = useState('');
+    //const [response, setResponse] = useState('');
 
-    const predefinedPrompt = props.prompt;
+    //const predefinedPrompt = props.prompt;
 
-    useEffect(() => {
-      if (predefinedPrompt) {
-        const fetchResponse = async () => {
-          const result = await sendPromptToChatGPT(predefinedPrompt);
-          setResponse(result);
-      };
+  //   useEffect(() => {
+  //     if (predefinedPrompt) {
+  //       const fetchResponse = async () => {
+  //         const result = await sendPromptToChatGPT(predefinedPrompt);
+  //         setResponse(result);
+  //     };
   
-      fetchResponse();
-    }
-  }, [predefinedPrompt]);
-  console.log(response);
+  //     fetchResponse();
+  //   }
+  // }, [predefinedPrompt]);
       return (
             <div className="mx-auto p-4 sm:px-4 bg-secondary shadow-lg">
               <div className="">
@@ -31,7 +30,7 @@ const Summary = (props) => {
               </div>
               <div className="bg-[#f6f8fa] rounded-sm shadow-lg border-1 border-[#f0f3fa]">
                   <p className="text-gray-700">
-                    {response}
+                    {/* {response} */}
                   </p>
               </div>
           </div>
