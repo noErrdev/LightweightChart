@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState, useEffect } from 'react';
-import { CrosshairMode} from 'lightweight-charts';
+import { CrosshairMode } from 'lightweight-charts';
 import { Chart, LineSeries, CandlestickSeries } from 'lightweight-charts-react-wrapper';
 
 import styles from './moving-average.module.css';
@@ -7,11 +7,12 @@ import styles from './moving-average.module.css';
 export default function MovingAverage(props) {
     // eslint-disable-next-line react/prop-types
     const originalData = props.data;
+    console.log(originalData);
     const ref = useRef(null);
 
     const [value, setValue] = useState('n/a');
-
     const [data, setData] = useState([]);
+
     const handleCrosshairMove = useCallback((e) => {
         if (ref.current === null) {
             return;
@@ -31,10 +32,10 @@ export default function MovingAverage(props) {
             const lines = text.split('\n').slice(1); // Skip the header line
             const parsedData = lines.map((line) => {
               const [date, , open, high, low, close] = line.split(',');
-    
+
               // Split the date into day, month, and year
               const [month, day , year] = date.split('/');
-    
+
               return {
                 close: parseFloat(close),
                 high: parseFloat(high),
@@ -47,8 +48,8 @@ export default function MovingAverage(props) {
                 },
               };
             });
-    
-            setData(parsedData);
+            const last50Data = parsedData.slice(-50);
+            setData(last50Data);
           })
           .catch((error) => console.log('Error fetching or parsing data:', error));
       }, []);
@@ -57,7 +58,7 @@ export default function MovingAverage(props) {
       const findLastEntryExitDates = (data) => {
         const entryDate = data.EntryDateTimesUtc ? new Date(data.EntryDateTimesUtc[data.EntryDateTimesUtc.length - 1]) : null;
         const exitDate = data.ExitDateTimesUtc ? new Date(data.ExitDateTimesUtc[data.ExitDateTimesUtc.length - 1]) : null;
-        
+
         const formatDate = (date) => {
           return date ? {
             day: date.getUTCDate(),
@@ -65,10 +66,10 @@ export default function MovingAverage(props) {
             year: date.getUTCFullYear()
           } : null;
         };
-        
+
         const formatEntryDate = formatDate(entryDate);
         const formatExitDate = formatDate(exitDate);
-          
+
         return { formatEntryDate, formatExitDate };
       };
 
@@ -78,12 +79,14 @@ export default function MovingAverage(props) {
     const dataMap = new Map(data.map(d => [toISODateString(d.time), d.open])); 
     const entryDateISO = entryDate ? toISODateString(entryDate) : null;
     const exitDateISO = exitDate ? toISODateString(exitDate) : null;
+
     // Prepare data for the line connecting EntryDate and ExitDate
     const entryExitLine = entryDateISO && exitDateISO ? [
         { time: entryDateISO, value: dataMap.get(entryDateISO) },
         { time: exitDateISO, value: dataMap.get(exitDateISO) }
     ] : [];
-  
+
+    console.log(data);
     return (
         <>
             <div className={styles.container}>
@@ -94,12 +97,13 @@ export default function MovingAverage(props) {
                     onCrosshairMove={handleCrosshairMove}
                 >
                     <CandlestickSeries
+                        ref={ref}
                         data={data}
                     />
                     {entryExitLine.length > 0 && (
                         <LineSeries
                             data={entryExitLine}
-                            color="rgba(4, 111, 232, 1)" // Red color for the line
+                            color="rgba(4, 111, 232, 1)" // Blue color for the line
                             lineWidth={5}
                         />
                     )}
@@ -109,5 +113,5 @@ export default function MovingAverage(props) {
                 </div>
             </div>
         </>
-    )
+    );
 }

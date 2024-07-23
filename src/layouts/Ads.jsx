@@ -1,42 +1,65 @@
-import ImageBox from "../components/ImageBox"
+import ImageBox from "../components/ImageBox";
+import { useState, useEffect } from 'react';
 
-const data = [
-    {
-      id: 1,
-      content: 'We’d like a spot for an image to be displayed as an advertisement',
-      url: '/1.jpg',
-      title: 'BTCUSDT : The decreasing price channel is still active'
-    },
-    {
-      id: 2,
-      content: 'We’d like a spot for an image to be displayed as an advertisement',
-      url: '/2.jpg',
-      title: 'The similarity between BTC and Gold will shock you'
-    },
-    {
-      id: 3,
-      content: 'We’d like a spot for an image to be displayed as an advertisement',
-      url: '/3.jpg',
-      title: 'Bitcoin 128k Bull flag'
-    },
-  ];
+// Function to generate ad data
+const generateAdData = () => {
+  const numberOfAds = 3; // Adjust based on the number of ads you expect
+  const ads = [];
+
+  for (let i = 1; i <= numberOfAds; i++) {
+    ads.push({
+      id: i,
+      contentFile: `/ads/ad${i}.txt`,
+      imageUrl: `/ads/ad${i}.jpg`,
+    });
+  }
+
+  return ads;
+};
+
 const Ads = () => {
-      return (
-      <div className="container mx-auto p-4 sm:px-8 bg-secondary rounded-md shadow-lg">
-        <div className="">
-          <div className="py-4">
-            <h2 className="text-4xl font-semibold leading-tight text-black">Advertisments</h2>
-          </div>
-          <div className="flex justify-between">
-            {data.map((item) => (
-              <div key={item.id} className="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 sm:px-8 py-2">
-                <ImageBox content={item.content} url={item.url} title={item.title} />
-              </div>
-            ))}
-          </div>
+  const [ads, setAds] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const adData = generateAdData();
+
+        // Fetch content for each ad
+        const updatedAds = await Promise.all(adData.map(async (ad) => {
+          const contentResponse = await fetch(`${ad.contentFile}`);
+          const contentText = await contentResponse.text();
+
+          return { ...ad, content: contentText };
+        }));
+
+        setAds(updatedAds);
+      } catch (error) {
+        console.error('Error fetching ads data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  console.log(ads);
+
+  return (
+    <div className="container mx-auto p-4 sm:px-8 bg-secondary rounded-md shadow-lg">
+      <div>
+        <div className="py-4">
+          <h2 className="text-4xl font-semibold leading-tight text-black">Advertisements</h2>
+        </div>
+        <div className="flex justify-between -mx-2">
+          {ads.map((item) => (
+            <div key={item.id} className="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 px-2 py-2">
+              <ImageBox content={item.content} url={item.imageUrl} />
+            </div>
+          ))}
         </div>
       </div>
-      )
-    }
+    </div>
+  );
+};
 
-    export default Ads
+export default Ads;

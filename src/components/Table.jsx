@@ -17,7 +17,7 @@ const Table = (props) => {
     }
   
     let icon = '';
-    if (count > 7) {
+    if (count >= 7) {
       icon = FireLogo; // Fire icon
     } else if (count <= 3) {
       icon = IceLogo; // Ice icon
@@ -81,7 +81,7 @@ const Table = (props) => {
       {cryptoData ? cryptoData.map((cryptocurrency, index) =>  
         <tr key ={index} value= {cryptocurrency.EntrySignalsName}>
             <td className="px-3 py-3 border-b-1 border-r-1 text-center border-gray-200 text-xxs">
-            <p className="text-gray-900 whitespace-no-wrap">{cryptocurrency.SymbolName}</p>
+            <p className="text-gray-600 whitespace-no-wrap">{cryptocurrency.SymbolName}</p>
             </td>
             <td className="px-3 py-3 border-b-1 border-r-1 text-center border-gray-200  text-xxs">
             <p className="text-gray-600 whitespace-no-wrap">{cryptocurrency.IsLong ? 'Long' : 'Short'}</p>

@@ -117,7 +117,7 @@ const App = () => {
       });
 
       setWinnerData(maxData);
-      const prompt = maxData ? `Please provide a brief 1-2 sentence write up about this ${maxData.IsLong ? '{Long}':'{Short}'} trade alerted on {${maxData.EntryDateTimesUtc[maxData.EntryDateTimesUtc.length -1]}}
+      const prompt = maxData ? `Please provide a brief 1-2 sentence write up about this ${maxData.IsLong ? 'Long':'Short'} trade alerted on {${maxData.EntryDateTimesUtc[maxData.EntryDateTimesUtc.length -1]}}
       that exited on {${maxData.ExitDateTimesUtc[maxData.ExitDateTimesUtc.length -1]}} that trades {${maxData.SymbolName}}. 
       It recently closed out a winner on {${maxData.ExitDateTimesUtc[maxData.ExitDateTimesUtc.length -1]}} for {${maxData.Results[maxData.Results.length -1]}}. 
       If possible, please find one unique stat and include it in the write up like 

@@ -1,5 +1,6 @@
-//const API_KEY = import.meta.env.VITE_OPENAI_API_KEY || "default_key";
+const API_KEY = import.meta.env.VITE_OPENAI_API_KEY || "default_key";
 // Never expose your API key in production code
+console.log(API_KEY);
 export const sendPromptToChatGPT = async (prompt) => {
       try {
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
